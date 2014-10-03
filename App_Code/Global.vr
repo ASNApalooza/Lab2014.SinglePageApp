@@ -1,0 +1,33 @@
+﻿Using System
+Using System.Data
+Using System.Configuration
+Using System.Web
+Using System.Web.Routing
+Using System.Web.Security
+Using System.Web.UI
+Using System.Web.UI.WebControls
+Using System.Web.UI.WebControls.WebParts
+Using System.Web.UI.HtmlControls
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass Global Access(*Public) Extends(System.Web.HttpApplication)
+
+	BegSr Application_Start
+		DclSrParm sender Type(*Object)
+		DclSrParm e Type(EventArgs)
+
+		RegisterRoutes(RouteTable.Routes)
+	EndSr
+
+	BegSr RegisterRoutes
+		DclSrParm routes Type(RouteCollection)
+
+		DclFld appRouter Type(Router)
+
+		appRouter = *New Router(routes)
+
+		// contacts.aspx catch-all route
+		appRouter.Page("{*path}", "default", "~/contacts.aspx")
+	EndSr
+
+EndClass
