@@ -1,0 +1,223 @@
+﻿Using System
+Using System.Data 
+Using System.Text
+Using System.Collections.Generic
+Using ASNA.DataGate.Client
+
+BegClass DataGateContactRepository Access(*Public) Implements(IContactRepository)
+
+	DclConst DBName Value("*Public/DG NET Local") 
+
+	DclDB pgmDB DBName("*Public/DG NET Local") 
+
+	DclDiskFile CustomerFile +
+		Type(*Update) +
+		Org(*Indexed) +
+		Prefix(CUSTOMER_) +
+		File("RPDB/CUSTOMER") +
+		DB(pgmDB) +
+		ImpOpen(*No) +
+		AddRec(*Yes)
+
+	DclDiskFile CustomerFileByEmail +
+		Type(*Update) +
+		Org(*Indexed) +
+		Prefix(CUSTOMER_) +
+		File("RPDB/CUSTOMERL3") +
+		DB(pgmDB) +
+		ImpOpen(*No) +
+		AddRec(*Yes) +
+		RnmFmt(RCUST, RCUSTY)
+
+	DclDiskFile CustomerInput +
+		Type(*Input) +
+		Org(*Indexed) +
+		Prefix(CUSTOMER_) +
+		File("RPDB/CUSTOMER") +
+		DB(pgmDB) +
+		ImpOpen(*No) +
+		RnmFmt(RCUST, RCUSTX)
+
+	DclMemoryFile CustomerMF +
+		DBDesc("*PUBLIC/DG NET Local") +
+		Prefix(CUSTOMER_) +
+		FileDesc("RPDB/CUSTOMER") +
+		ImpOpen(*YES) +
+		RnmFmt(RCUSTMF)
+
+	BegFunc FindContacts Type(List(*Of Contact)) Access(*Public) Implements(IContactRepository.FindContacts)
+		DclFld contacts Type(List(*Of Contact)) New()
+		DclFld dt Type(DataTable)
+		DclFld contactEntity Type(Contact)
+
+		Connect pgmDB
+		Open CustomerInput
+
+		Read CustomerInput
+		DoWhile NOT CustomerInput.IsEof
+			Write CustomerMF
+			Read CustomerInput
+		EndDo
+
+		dt = CustomerMF.DataSet.Tables[0]
+
+		ForEach dr Type(DataRow) Collection(dt.Rows)
+			contactEntity = GetContactInstance(dr)
+			contacts.Add(contactEntity)
+		EndFor
+
+		Close CustomerInput
+		Disconnect pgmDB
+
+		LeaveSr contacts
+	EndFunc
+
+	BegFunc FindContact Type(Contact) Access(*Public) Implements(IContactRepository.FindContact)
+		DclSrParm id Type(*Integer4)
+
+		DclFld contactEntity  Type(Contact)
+		DclFld dt Type(DataTable)
+
+		Connect pgmDB
+		Open CustomerInput
+
+		Chain CustomerInput Key(id)
+		If (CustomerInput.IsFound)
+			Write CustomerMF
+			dt = CustomerMF.DataSet.Tables[0]
+			contactEntity = GetContactInstance(dt.Rows[0])
+		EndIf
+
+		Close CustomerInput
+		Disconnect pgmDB
+
+		LeaveSr contactEntity
+	EndFunc
+
+	BegFunc FindContactByEmail Type(Contact) Access(*Public) Implements(IContactRepository.FindContactByEmail)
+		DclSrParm email Type(*String)
+
+		DclFld contactEntity Type(Contact)
+		DclFld dt Type(DataTable)
+
+		Connect pgmDB
+		Open CustomerFileByEmail
+
+		Chain CustomerFileByEmail Key(email)
+		If (CustomerFileByEmail.IsFound)
+			Write CustomerMF
+			dt = CustomerMF.DataSet.Tables[0]
+			contactEntity = GetContactInstance(dt.Rows[0])
+		EndIf
+
+		Close CustomerFileByEmail
+		Disconnect pgmDB
+
+		LeaveSr contactEntity
+	EndFunc
+
+	BegSr AddContact Access(*Public) Implements(IContactRepository.AddContact)
+		DclSrParm contactEntity Type(Contact)
+
+		pgmDB.DBName = DBNAME
+		Connect pgmDB
+		Open CustomerFile
+		
+		contactEntity.id = GetNextId()
+		AssignFields(contactEntity)
+		Write CustomerFile
+
+		Close CustomerFile
+		Disconnect pgmDB
+	EndSr
+
+	BegSr UpdateContact Access(*Public) Implements(IContactRepository.UpdateContact)
+		DclSrParm contactEntity Type(Contact)
+
+		pgmDB.DBName = DBNAME
+		Connect pgmDB
+		Open CustomerFile
+
+		Chain CustomerFile Key(contactEntity.id)
+		If CustomerFile.IsFound
+			AssignFields(contactEntity)
+			Update CustomerFile
+        EndIf
+
+		Close CustomerFile
+		Disconnect pgmDB
+	EndSr
+
+	BegSr RemoveContact Access(*Public) Implements(IContactRepository.RemoveContact)
+		DclSrParm contactEntity Type(Contact)
+
+		pgmDB.DBName = DBNAME
+		Connect pgmDB
+		Open CustomerFile
+
+		Chain CustomerFile Key(contactEntity.id)
+		If CustomerFile.IsFound
+			Delete CustomerFile
+        EndIf
+
+		Close CustomerFile
+		Disconnect pgmDB
+	EndSr
+
+	BegFunc GetNextId Type(*Integer8)
+		DclFld BOF Type(*Boolean)
+
+		SetLL CustomerFile Key(*End)
+		ReadP CustomerFile Eof(BOF)
+		If (BOF)
+			LeaveSr Value(1)
+		Else
+			LeaveSr Value(Customer_CMCustNo + 1)
+		EndIf
+	EndFunc
+
+	BegFunc GetContactInstance Type(Contact)
+		DclSrParm dr Type(DataRow)
+
+		DclFld contactEntity Type(Contact) New()
+		
+		contactEntity.ID = dr['CMCUSTNO'] *As System.Decimal
+		contactEntity.Company = (dr['CMNAME'] *As System.String).Trim()
+		contactEntity.FirstName = (dr['CMFNAME'] *As System.String).Trim()
+		contactEntity.LastName = (dr['CMLNAME'] *As System.String).Trim()
+		contactEntity.Email = (dr['CMCONEMAIL'] *As System.String).Trim()
+		contactEntity.Phone = (dr['CMPHONE'] *As System.Decimal).ToString().Trim()
+		contactEntity.Address1 = (dr['CMADDR1'] *As System.String).Trim()
+		If (String.IsNullOrEmpty((dr['CMADDR2'] *As System.String).Trim()))
+			contactEntity.Address2 = *Nothing
+		Else
+			contactEntity.Address2 = (dr['CMADDR2'] *As System.String).Trim()
+		EndIf
+		contactEntity.City = (dr['CMCITY'] *As System.String).Trim()
+		contactEntity.State = (dr['CMSTATE'] *As System.String).Trim()
+		contactEntity.PostalCode = (dr['CMPOSTCODE'] *As System.String).Trim()
+
+		LeaveSr contactEntity
+	EndFunc
+
+	BegSr AssignFields
+		DclSrParm contactEntity Type(Contact)
+		
+		Customer_CMCUSTNO = contactEntity.ID
+		Customer_CMNAME = contactEntity.Company.Trim()
+		Customer_CMFNAME = contactEntity.FirstName.Trim()
+		Customer_CMLNAME = contactEntity.LastName.Trim()
+		Customer_CMCONEMAIL = contactEntity.Email.Trim()
+		Customer_CMPHONE = contactEntity.Phone.Trim()
+		Customer_CMADDR1 = contactEntity.Address1.Trim()
+		If (contactEntity.Address2 = *Nothing)
+			Customer_CMADDR2 = String.Empty
+		Else
+			Customer_CMADDR2 = contactEntity.Address2.Trim()
+		EndIf
+		Customer_CMCITY = contactEntity.City.Trim()
+		Customer_CMSTATE = contactEntity.State.Trim()
+		Customer_CMPOSTCODE = contactEntity.PostalCode.Trim()
+	EndSr
+
+EndClass

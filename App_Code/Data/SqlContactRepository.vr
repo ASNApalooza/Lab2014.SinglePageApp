@@ -1,0 +1,276 @@
+﻿Using System
+Using System.Configuration
+Using System.Collections.Generic
+Using System.Data
+Using System.Data.SqlClient
+Using System.Text
+
+BegClass SqlContactRepository Access(*Public) Implements(IContactRepository)
+
+	DclFld connection Type(SqlConnection)
+
+	BegConstructor Access(*Public)
+
+		DclFld connectionString Type(*String)
+		
+		connectionString = ConfigurationManager.ConnectionStrings["Application"].ConnectionString
+		connection = *New SqlConnection(connectionString)
+	EndConstructor
+
+	// Retrieves all Contacts
+	BegFunc FindContacts Type(List(*Of Contact)) Access(*Public) Implements(IContactRepository.FindContacts)
+
+		DclFld contacts Type(List(*Of Contact))
+		DclFld contactEntity Type(Contact)
+		DclFld command Type(SqlCommand)
+		DclFld data Type(SqlDataReader)
+
+		connection.Open()
+
+		command = *New SqlCommand("SELECT * FROM Contacts;", connection)
+		data = command.ExecuteReader()
+
+		contacts = *New List(*Of Contact)()
+
+		If (data.HasRows)
+			DoWhile (data.Read())
+				contactEntity = GetContactInstance(data)
+				contacts.Add(contactEntity)
+			EndDo
+		EndIf
+
+		data.Close()
+		connection.Close()
+
+		LeaveSr contacts
+	EndFunc
+
+	// Retrieves Contact by Id
+	BegFunc FindContact Type(Contact) Access(*Public) Implements(IContactRepository.FindContact)
+		DclSrParm id Type(*Integer4)
+
+		DclFld contactEntity Type(Contact)
+		DclFld command Type(SqlCommand)
+		DclFld idParm Type(SqlParameter)
+		DclFld data Type(SqlDataReader)
+
+		connection.Open()
+
+		command = *New SqlCommand("SELECT * FROM Contacts WHERE id = @id;", connection)
+		idParm = *New SqlParameter("@id", SqlDbType.Int)
+		idParm.Value = id
+		command.Parameters.Add(idParm)
+		data = command.ExecuteReader()
+
+		If (data.HasRows)
+			DoWhile (data.Read())
+				contactEntity = GetContactInstance(data)
+				data.Close()
+				connection.Close()
+
+				LeaveSr contactEntity
+			EndDo
+		EndIf
+
+		data.Close()
+		connection.Close()
+
+		LeaveSr *Nothing
+	EndFunc
+
+	// Retrieves Contact by Email
+	BegFunc FindContactByEmail Type(Contact) Access(*Public) Implements(IContactRepository.FindContactByEmail)
+		DclSrParm email Type(*String)
+
+		DclFld contactEntity Type(Contact)
+		DclFld command Type(SqlCommand)
+		DclFld emailParm Type(SqlParameter)
+		DclFld data Type(SqlDataReader)
+
+		connection.Open()
+
+		command = *New SqlCommand("SELECT * FROM Contacts WHERE email = @email;", connection)
+		emailParm = *New SqlParameter("@email", SqlDbType.NVarChar)
+		emailParm.Value = email
+		command.Parameters.Add(emailParm)
+		data = command.ExecuteReader()
+
+		If (data.HasRows)
+			DoWhile (data.Read())
+				contactEntity = GetContactInstance(data)
+				data.Close()
+				connection.Close()
+
+				LeaveSr contactEntity
+			EndDo
+		EndIf
+
+		data.Close()
+		connection.Close()
+
+		LeaveSr *Nothing
+	EndFunc
+
+	// Persists a new Contact
+	BegSr AddContact Access(*Public) Implements(IContactRepository.AddContact)
+		DclSrParm contactEntity Type(Contact)
+
+		DclFld command Type(SqlCommand)
+		DclFld statement Type(StringBuilder)
+
+		connection.Open()
+
+		statement = *New StringBuilder()
+		statement.Append("INSERT INTO Contacts ")
+		statement.Append("(company, firstName, lastName, email, phone, address1, address2, city, state, postalCode) ")
+		statement.Append("VALUES (@company, @firstName, @lastName, @email, @phone, @address1, @address2, @city, @state, @postalCode);")
+
+		command = *New SqlCommand(statement.ToString(), connection)
+
+		AssignFields(contactEntity, command.Parameters)
+
+		command.ExecuteNonQuery()
+
+		connection.Close()
+	EndSr
+
+	// Updates a persisted Contact
+	BegSr UpdateContact Access(*Public) Implements(IContactRepository.UpdateContact)
+		DclSrParm contactEntity Type(Contact)
+
+		DclFld command Type(SqlCommand)
+		DclFld statement Type(StringBuilder)
+		DclFld idParm Type(SqlParameter)
+
+		connection.Open()
+
+		statement = *New StringBuilder()
+		statement.Append("UPDATE Contacts ")
+		statement.Append("SET Company = @company, firstName = @firstName, lastName = @lastName, email = @email, phone = @phone, address1 = @address1, address2 = @address2, city = @city, state = @state, postalCode = @postalCode ")
+		statement.Append("WHERE id = @id;")
+
+		command = *New SqlCommand(statement.ToString(), connection)
+
+		AssignFields(contactEntity, command.Parameters)
+
+		idParm = *New SqlParameter("@id", SqlDbType.Int)
+		idParm.Value = contactEntity.id
+		command.Parameters.Add(idParm)
+
+		command.ExecuteNonQuery()
+
+		connection.Close()
+	EndSr
+
+	// Removes a persisted Contact
+	BegSr RemoveContact Access(*Public) Implements(IContactRepository.RemoveContact)
+		DclSrParm contactEntity Type(Contact)
+
+		DclFld command Type(SqlCommand)
+		DclFld statement Type(StringBuilder)
+		DclFld idParm Type(SqlParameter)
+
+		connection.Open()
+
+		statement = *New StringBuilder()
+		statement.Append("DELETE FROM Contacts ")
+		statement.Append("WHERE id = @id;")
+
+		command = *new SqlCommand(statement.ToString(), connection)
+
+		idParm = *New SqlParameter("@id", SqlDbType.Int)
+		idParm.Value = contactEntity.id
+		command.Parameters.Add(idParm)
+
+		command.ExecuteNonQuery()
+
+		connection.Close()
+	EndSr
+
+	BegSr AssignFields Access(*Protected)
+		DclSrParm contactEntity Type(Contact)
+		DclSrParm params Type(SqlParameterCollection)
+
+		DclFld companyParm Type(SqlParameter)
+		DclFld firstNameParm Type(SqlParameter)
+		DclFld lastNameParm Type(SqlParameter)
+		DclFld emailParm Type(SqlParameter)
+		DclFld phoneParm Type(SqlParameter)
+		DclFld address1Parm Type(SqlParameter)
+		DclFld address2Parm Type(SqlParameter)
+		DclFld cityParm Type(SqlParameter)
+		DclFLd stateParm Type(SqlParameter)
+		DclFld postalCodeParm Type(SqlParameter)
+
+		companyParm = *New SqlParameter("@company", SqlDbType.NVarChar)
+		companyParm.Value = contactEntity.company.Trim()
+		params.Add(companyParm)
+
+		firstNameParm = *New SqlParameter("@firstName", SqlDbType.NVarChar)
+		firstNameParm.Value = contactEntity.firstName.Trim()
+		params.Add(firstNameParm)
+
+		lastNameParm = *New SqlParameter("@lastName", SqlDbType.NVarChar)
+		lastNameParm.Value = contactEntity.lastName.Trim()
+		params.Add(lastNameParm)
+
+		emailParm = *New SqlParameter("@email", SqlDbType.NVarChar)
+		emailParm.Value = contactEntity.email.Trim()
+		params.Add(emailParm)
+
+		phoneParm = *New SqlParameter("@phone", SqlDbType.NVarChar)
+		phoneParm.Value = contactEntity.phone.Trim()
+		params.Add(phoneParm)
+
+		address1Parm = *New SqlParameter("@address1", SqlDbType.NVarChar)
+		address1Parm.Value = contactEntity.address1.Trim()
+		params.Add(address1Parm)
+
+		address2Parm = *New SqlParameter("@address2", SqlDbType.NVarChar)
+		If (String.IsNullOrEmpty(contactEntity.address2))
+			address2Parm.Value = DBNull.Value
+		Else
+			address2Parm.Value = contactEntity.address2.Trim()
+		Endif
+		params.Add(address2Parm)
+
+		cityParm = *New SqlParameter("@city", SqlDbType.NVarChar)
+		cityParm.Value = contactEntity.city.Trim()
+		params.Add(cityParm)
+
+		stateParm = *New SqlParameter("@state", SqlDbType.NVarChar)
+		stateParm.Value = contactEntity.state.Trim()
+		params.Add(stateParm)
+
+		postalCodeParm = *New SqlParameter("@postalCode", SqlDbType.NVarChar)
+		postalCodeParm.Value = contactEntity.postalCode.Trim()
+		params.Add(postalCodeParm)
+	EndSr
+
+	BegFunc GetContactInstance Type(Contact) Access(*Protected)
+		DclSrParm data Type(SqlDataReader)
+
+		DclFld contactEntity Type(Contact)
+
+		contactEntity = *New Contact()
+
+		contactEntity.id = Convert.ToInt32(Data["id"])
+		contactEntity.company = data["company"].ToString().Trim()
+		contactEntity.firstName = data["firstName"].ToString().Trim()
+		contactEntity.lastName = data["lastName"].ToString().Trim()
+		contactEntity.email = data["email"].ToString().Trim()
+		contactEntity.phone = data["phone"].ToString().Trim()
+		contactEntity.address1 = data["address1"].ToString().Trim()
+		If (String.IsNullOrEmpty(data["address2"].ToString()))
+			contactEntity.address2 = *Nothing
+		Else
+			contactEntity.address2 = data["address2"].ToString().Trim()
+		EndIf
+		contactEntity.city = data["city"].ToString().Trim()
+		contactEntity.state = data["state"].ToString().Trim()
+		contactEntity.postalCode = data["postalCode"].ToString().Trim()
+
+		LeaveSr contactEntity
+	EndFunc
+
+EndClass

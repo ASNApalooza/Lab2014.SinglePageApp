@@ -1,0 +1,23 @@
+﻿Using System
+Using System.Data
+Using System.Data.SqlClient
+Using System.Configuration
+Using System.Web
+
+BegClass Registry Access(*Public)
+
+	DclFld contactRepo Type(IContactRepository) Access(*Protected)
+
+	// Retrieves the ContactRepository service
+	BegFunc GetContactRepository Type(IContactRepository) Access(*Public)
+		If (contactRepo = *Nothing)
+			// Uses DataGate
+			contactRepo = *New DataGateContactRepository()
+			// Uses SQL Server
+			// contactRepo = *New SqlContactRepository()
+		EndIf
+
+		LeaveSr contactRepo
+	EndFunc
+
+EndClass
