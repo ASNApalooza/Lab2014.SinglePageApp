@@ -1,0 +1,29 @@
+﻿Using System
+Using System.Collections.Generic
+
+BegInterface IContactRepository
+
+	BegFunc FindContacts Type(List(*Of Contact))
+	EndFunc
+
+	BegFunc FindContact Type(Contact)
+		DclSrParm id Type(*Integer4)
+	EndFunc
+
+	BegFunc FindContactByEmail Type(Contact)
+		DclSrParm email Type(*String)
+	EndFunc
+
+	BegSr AddContact
+		DclSrParm contactEntity Type(Contact)
+	EndSr
+
+	BegSr UpdateContact
+		DclSrParm contactEntity Type(Contact)
+	EndSr
+
+	BegSr RemoveContact
+		DclSrParm contactEntity Type(Contact)
+	EndSr
+
+EndInterface

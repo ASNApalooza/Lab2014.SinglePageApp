@@ -1,0 +1,166 @@
+﻿Using System
+Using System.Collections.Generic
+Using System.Web.Script.Serialization
+
+BegClass Contact Access(*Public)
+
+	DclFld _id Type(*Integer4) Access(*Protected)
+	BegProp id Type(*Integer4) Access(*Public)
+		BegSet
+			_id = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _id
+		EndGet
+	EndProp
+
+	DclFld _company Type(*String) Access(*Protected)
+	BegProp company Type(*String) Access(*Public)
+		BegSet
+			_company = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _company
+		EndGet
+	EndProp
+
+	DclFld _firstName Type(*String) Access(*Protected)
+	BegProp firstName Type(*String) Access(*Public)
+		BegSet
+			_firstName = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _firstName
+		EndGet
+	EndProp
+
+	DclFld _lastName Type(*String) Access(*Protected)
+	BegProp lastName Type(*String) Access(*Public)
+		BegSet
+			_lastName = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _lastName
+		EndGet
+	EndProp
+
+	DclFld _email Type(*String) Access(*Protected)
+	BegProp email Type(*String) Access(*Public)
+		BegSet
+			_email = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _email
+		EndGet
+	EndProp
+
+	DclFld _phone Type(*String) Access(*Protected)
+	BegProp phone Type(*String) Access(*Public)
+		BegSet
+			_phone = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _phone
+		EndGet
+	EndProp
+
+	DclFld _address1 Type(*String) Access(*Protected)
+	BegProp address1 Type(*String) Access(*Public)
+		BegSet
+			_address1 = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _address1
+		EndGet
+	EndProp
+
+	DclFld _address2 Type(*String) Access(*Protected)
+	BegProp address2 Type(*String) Access(*Public)
+		BegSet
+			_address2 = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _address2
+		EndGet
+	EndProp
+
+	DclFld _city Type(*String) Access(*Protected)
+	BegProp city Type(*String) Access(*Public)
+		BegSet
+			_city = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _city
+		EndGet
+	EndProp
+
+	DclFld _state Type(*String) Access(*Protected)
+	BegProp state Type(*String) Access(*Public)
+		BegSet
+			_state = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _state
+		EndGet
+	EndProp
+
+	DclFld _postalCode Type(*String) Access(*Protected)
+	BegProp postalCode Type(*String) Access(*Public)
+		BegSet
+			_postalCode = *PropVal
+		EndSet
+		BegGet
+			LeaveSr _postalCode
+		EndGet
+	EndProp
+
+	BegSr BindJsonData Access(*Public)
+		DclSrParm Content Type(*String)
+
+		DclFld Serializer Type(JavaScriptSerializer) New()
+		DclFld Data Type(Dictionary(*Of *String, *String))
+
+		Data = Serializer.Deserialize(Content, *TypeOf(Dictionary(*Of *String, *String))) *As Dictionary(*Of *String, *String)
+		
+		If (Data.ContainsKey("company"))
+			company = Data["company"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("firstName"))
+			firstName = Data["firstName"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("lastName"))
+			lastName = Data["lastName"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("email"))
+			email = Data["email"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("phone"))
+			phone = Data["phone"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("address1"))
+			address1 = Data["address1"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("address2"))
+			address2 = Data["address2"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("city"))
+			city = Data["city"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("state"))
+			state = Data["state"].Trim()
+		EndIf
+
+		If (Data.ContainsKey("postalCode"))
+			postalCode = Data["postalCode"].Trim()
+		EndIf
+	EndSr
+
+EndClass
