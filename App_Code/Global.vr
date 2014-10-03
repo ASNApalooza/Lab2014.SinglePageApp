@@ -26,6 +26,9 @@ BegClass Global Access(*Public) Extends(System.Web.HttpApplication)
 
 		appRouter = *New Router(routes)
 
+		// ContactController routes
+		appRouter.Get("api/contacts", "IndexAction", *TypeOf(ContactController))
+
 		// contacts.aspx catch-all route
 		appRouter.Page("{*path}", "default", "~/contacts.aspx")
 	EndSr

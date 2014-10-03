@@ -1,0 +1,27 @@
+﻿Using System
+Using System.Collections.Generic
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass ContactController Access(*Public) Extends(Controller)
+
+	DclFld serviceRegistry Type(Registry) Access(*Private)
+
+	BegConstructor Access(*Public)
+		serviceRegistry = *New Registry()
+	EndConstructor
+
+	// IndexAction
+	// Path: /api/contacts
+	// Method: GET
+	BegFunc IndexAction Type(List(*Of Contact)) Access(*Public)
+
+		DclFld contacts Type(List(*Of Contact))
+		DclFld contactRepo Type(IContactRepository)
+
+		contactRepo = serviceRegistry.GetContactRepository()
+		contacts = contactRepo.FindContacts()
+
+		LeaveSr contacts
+	EndFunc
+
+EndClass
