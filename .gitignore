@@ -2,7 +2,5 @@
 /App_Data/Application_log.ldf
 /App_Data/ContactSeeder.zip
 /App_Data/dbo.Contacts.sql
-/Bin/ASNA.Palooza.Lab2014.JsonLib.dll
-/Bin/ASNA.Palooza.Lab2014.JsonLib.pdb
 /*.sublime-project
 /*.sublime-workspace
