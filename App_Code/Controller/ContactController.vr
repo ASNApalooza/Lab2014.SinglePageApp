@@ -39,4 +39,68 @@ BegClass ContactController Access(*Public) Extends(Controller)
 		LeaveSr contactEntity
 	EndFunc
 
+	// CreateAction
+	// Path: /api/contacts
+	// Method: POST
+	BegFunc CreateAction Type(Contact) Access(*Public)
+
+		DclFld contactEntity Type(Contact)
+		DclFld contactRepo Type(IContactRepository)
+
+		contactRepo = serviceRegistry.GetContactRepository()
+		contactEntity = *New Contact()
+		
+		contactEntity.BindJsonData(*Base.GetRequestContent())
+
+		contactRepo.AddContact(contactEntity)
+
+		contactEntity = contactRepo.FindContactByEmail(contactEntity.email)
+
+		// Set the Location header and 201 status code
+		Http.Response.AddHeader("Location", "/contacts/" + contactEntity.id)
+		Http.Response.StatusCode = 201
+
+		LeaveSr contactEntity
+	EndFunc
+
+	// UpdateAction
+	// Path: /api/contacts/{id}
+	// Method: PUT
+	BegFunc UpdateAction Type(Contact) Access(*Public)
+		DclSrParm id Type(*Integer4)
+
+		DclFld contactEntity Type(Contact)
+		DclFld contactRepo Type(IContactRepository)
+
+		contactRepo = serviceRegistry.GetContactRepository()
+		contactEntity = contactRepo.FindContact(id)
+
+		If (contactEntity <> *Nothing)
+			contactEntity.BindJsonData(*Base.GetRequestContent())
+
+			contactRepo.UpdateContact(contactEntity)
+		EndIf
+
+		LeaveSr contactEntity
+	EndFunc
+
+	// DeleteAction
+	// Path: /api/contacts/{id}
+	// Method: DELETE
+	BegFunc DeleteAction Type(Contact) Access(*Public)
+		DclSrParm id Type(*Integer4)
+
+		DclFld contactEntity Type(Contact)
+		DclFld contactRepo Type(IContactRepository)
+
+		contactRepo = serviceRegistry.GetContactRepository()
+		contactEntity = contactRepo.FindContact(id)
+
+		If (contactEntity <> *Nothing)
+			contactRepo.RemoveContact(contactEntity)
+		EndIf
+
+		LeaveSr contactEntity
+	EndFunc
+
 EndClass
