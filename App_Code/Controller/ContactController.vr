@@ -24,4 +24,19 @@ BegClass ContactController Access(*Public) Extends(Controller)
 		LeaveSr contacts
 	EndFunc
 
+	// ShowAction
+	// Path: /api/contacts/{id}
+	// Method: GET
+	BegFunc ShowAction Type(Contact) Access(*Public)
+		DclSrParm id Type(*Integer4)
+
+		DclFld contactEntity Type(Contact)
+		DclFld contactRepo Type(IContactRepository)
+
+		contactRepo = serviceRegistry.GetContactRepository()
+		contactEntity = contactRepo.FindContact(id)
+
+		LeaveSr contactEntity
+	EndFunc
+
 EndClass
