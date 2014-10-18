@@ -5,3 +5,15 @@
 // libraries
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap";
 @import "font-awesome/scss/font-awesome";
+@import "bootstrap-social/bootstrap-social";
+
+// base
+@import "base/global";
+
+// layout
+@import "layout/main";
+
+// modules
+@import "module/jumbotron";
+@import "module/navbar";
+@import "module/panels";

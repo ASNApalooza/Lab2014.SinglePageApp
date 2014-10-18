@@ -1,0 +1,22 @@
+.panel-group {
+    .panel-heading {
+        padding: 0;
+
+        .panel-title {
+            font-weight: bold;
+        }
+
+        a {
+            display: block;
+            padding: 10px 15px;
+
+            &:hover, &:focus {
+                text-decoration: none;
+            }
+
+            &:active, &:focus {
+                outline: none;
+            }
+        }
+    }
+}

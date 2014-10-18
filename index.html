@@ -6,10 +6,12 @@
 <title>Build a Single-Page App with an AVR Web API</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" href="/Lab2014.SinglePageApp/favicon.ico">
+<link rel="stylesheet" href="/Lab2014.SinglePageApp/app_assets/css/prettify.css">
 <link rel="stylesheet" href="/Lab2014.SinglePageApp/app_assets/css/main.css">
 <script src="/Lab2014.SinglePageApp/app_assets/vendor/modernizr/modernizr.js"></script>
 </head>
 <body>
+<input id="base_url" type="hidden" value="/Lab2014.SinglePageApp/">
 <div id="wrapper" class="wrapper">
     <nav id="navigation" class="navigation navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div id="navbar-container" class="navbar-container container">
@@ -22,21 +24,40 @@
                 </button>
             </div><!-- #navbar-header -->
             <div id="navbar-collapse" class="navbar-collapse collapse">
-                <ul id="navbar-menu" class="navbar-menu nav navbar-nav">
-                    <li><a href="/Lab2014.SinglePageApp/">Home</a></li>
+                <ul id="navbar-menu" class="navbar-menu nav navbar-nav" role="menu">
+                    <li><a href="/Lab2014.SinglePageApp/#overview" data-asna-nav="route:default:index">Overview</a></li>
+                    <li class="dropdown">
+                        <a href="/Lab2014.SinglePageApp/" class="dropdown" data-toggle="dropdown">
+                            Tutorial <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Lab2014.SinglePageApp/#tutorial/part-0-start" data-asna-nav="route:tutorial:start">Part 0 - Start</a></li>
+                            <li><a href="/Lab2014.SinglePageApp/#tutorial/part-1-domain" data-asna-nav="route:tutorial:domain">Part 1 - Domain</a></li>
+                            <li><a href="/Lab2014.SinglePageApp/#tutorial/part-2-data" data-asna-nav="route:tutorial:data">Part 2 - Data</a></li>
+                            <li><a href="/Lab2014.SinglePageApp/#tutorial/part-3-page" data-asna-nav="route:tutorial:page">Part 3 - Page</a></li>
+                            <li><a href="/Lab2014.SinglePageApp/#tutorial/part-4-index" data-asna-nav="route:tutorial:index">Part 4 - Index</a></li>
+                            <li><a href="/Lab2014.SinglePageApp/#tutorial/part-5-show" data-asna-nav="route:tutorial:show">Part 5 - Show</a></li>
+                            <li><a href="/Lab2014.SinglePageApp/#tutorial/part-6-crud" data-asna-nav="route:tutorial:crud">Part 6 - CRUD</a></li>
+                            <li><a href="/Lab2014.SinglePageApp/#tutorial/part-7-backbone" data-asna-nav="route:tutorial:backbone">Part 7 - Backbone</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/Lab2014.SinglePageApp/#downloads" data-asna-nav="route:downloads:index">Downloads</a></li>
+                    <li><a href="/Lab2014.SinglePageApp/#slides" data-asna-nav="route:slides:index">Slides</a></li>
                 </ul><!-- #navbar-menu -->
             </div><!-- #navbar-collapse -->
         </div><!-- #navbar-container -->
     </nav><!-- #navigation -->
-    <header id="header" class="header" role="banner">
-    </header><!-- #header -->
     <div id="main" class="main" role="main">
     </div><!-- #main -->
     <footer id="footer" class="footer" role="contentinfo">
+        <div class="container">
+            <div class="well well-sm text-center">
+                <a href="http://asna.com">&copy; 2014 ASNA. All Rights Reserved.</a>
+            </div>
+        </div>
     </footer><!-- #footer -->
 </div><!-- #wrapper -->
-<script src="/Lab2014.SinglePageApp/app_assets/vendor/requirejs/require.js"></script>
-<script src="/Lab2014.SinglePageApp/app_assets/js/config.js"></script>
-<script src="/Lab2014.SinglePageApp/app_assets/js/main.js"></script>
+<script src="/Lab2014.SinglePageApp/app_assets/js/plugins/prettify/prettify.js"></script>
+<script src="/Lab2014.SinglePageApp/app_assets/js/main.min.js"></script>
 </body>
 </html>
