@@ -40,17 +40,28 @@ SinglePageApp
 |   Web.config
 |   Web.Debug.config
 |
-\---App_Data
-        Application.mdf
-        Application_log.ldf
-        ContactSeeder.zip
-        dbo.Contacts.sql
++---App_Data
+|       Application.mdf
+|       Application_log.ldf
+|       ContactSeeder.zip
+|       dbo.Contacts.sql
+|
+\---Bin
+        ASNA.Palooza.Lab2014.JsonLib.dll
+        ASNA.Palooza.Lab2014.JsonLib.pdb
 </pre>
 <p>
     The App_Data folder contains an SQL database as an alternative to the
     local DataGate database. The database layer is covered in
     <a href="/Lab2014.BootstrapApp/#tutorial/part-2-data" data-asna-nav="route:tutorial:data">part 2</a>
     of the tutorial.
+</p>
+<p>
+    The Bin folder contains a library we will use. The library will help us create
+    routes that can map to ASPX pages or methods in a
+    <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">controller</a>
+    class. The library also provides a base controller class which is really an
+    <code>HTTPHandler</code> that will return our data as <a href="http://json.org/">JSON</a>.
 </p>
 <p>
     The <code>.gitignore</code> and <code>README.md</code> files are used
