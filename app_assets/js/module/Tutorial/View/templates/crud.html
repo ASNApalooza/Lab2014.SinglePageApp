@@ -1,6 +1,454 @@
 <div class="page-header">
     <h2>Part 6: CRUD</h2>
 </div>
+<p>
+    <strong>CRUD</strong> stands for <strong>C</strong>reate, <strong>R</strong>ead,
+    <strong>U</strong>pdate, and <strong>D</strong>elete. So far, our application
+    can only read contacts.
+</p>
+<p>
+    Reading a resource is accomplished with the <code>GET</code> HTTP method. We
+    will need to use other HTTP methods to complete our CRUD application.
+</p>
+<p>
+    Open <code>App_Code\Controller\ContactController.vr</code> and add a public
+    <code>CreateAction</code> method. It will return an object of type
+    <code>Contact</code>.
+</p>
+<p>
+    Declare a <code>contactEntity</code> variable of type <code>Contact</code>.
+    Declare a <code>contactRepo</code> variable of type <code>IContactRepository</code>.
+    Set the <code>contactRepo</code> by calling <code>serviceRegistry.GetContactRepository()</code>
+    and set the <code>contactEntity</code> to a new instance of <code>Contact</code>.
+</p>
+<p>
+    To set the contact properties, add the following line:
+</p>
+<pre class="prettyprint">
+contactEntity.BindJsonData(*Base.GetRequestContent())
+</pre>
+<p>
+    The <code>*Base.GetRequestContent()</code> method will fetch the incoming request
+    body, which will be a JSON string. We pass that data into the <code>BindJsonData</code>
+    method on the <code>Contact</code> object.
+</p>
+<p>
+    To add the new contact, call <code>contactRepo.AddContact(contactEntity)</code>.
+    Now we would like to use a <code>201 - Created</code> response, which normally
+    includes a <code>Location</code> header with the path to the new resource.
+    Unfortunately, we don&rsquo;t know the ID of the new contact. We do, however,
+    know the email address and our contact repository will let us use that. When
+    we refetch the contact using the email address, the object will have the new
+    ID available. The <code>ContactController</code> now looks like this:
+</p>
+<div class="panel-group" id="contact-controller1-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contact-controller1-source" href="#contact-controller1-source-body">
+                    <code>App_Code\Controller\ContactController.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contact-controller1-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Collections.Generic
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass ContactController Access(*Public) Extends(Controller)
+
+    DclFld serviceRegistry Type(Registry) Access(*Private)
+
+    BegConstructor Access(*Public)
+        serviceRegistry = *New Registry()
+    EndConstructor
+
+    // IndexAction
+    // Path: /api/contacts
+    // Method: GET
+    BegFunc IndexAction Type(List(*Of Contact)) Access(*Public)
+
+        DclFld contacts Type(List(*Of Contact))
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contacts = contactRepo.FindContacts()
+
+        LeaveSr contacts
+    EndFunc
+
+    // ShowAction
+    // Path: /api/contacts/{id}
+    // Method: GET
+    BegFunc ShowAction Type(Contact) Access(*Public)
+        DclSrParm id Type(*Integer4)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = contactRepo.FindContact(id)
+
+        LeaveSr contactEntity
+    EndFunc
+
+    // CreateAction
+    // Path: /api/contacts
+    // Method: POST
+    BegFunc CreateAction Type(Contact) Access(*Public)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = *New Contact()
+
+        contactEntity.BindJsonData(*Base.GetRequestContent())
+
+        contactRepo.AddContact(contactEntity)
+
+        contactEntity = contactRepo.FindContactByEmail(contactEntity.email)
+
+        // Set the Location header and 201 status code
+        Http.Response.AddHeader("Location", "/contacts/" + contactEntity.id)
+        Http.Response.StatusCode = 201
+
+        LeaveSr contactEntity
+    EndFunc
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    Notice the path is the same as the <code>IndexAction</code>, but the HTTP method
+    will be <code>POST</code>.
+</p>
+<p>
+    Create a new public method called <code>UpdateAction</code> that will return
+    type <code>Contact</code> and receive a parameter <code>id</code> of type
+    <code>*Integer4</code>.
+</p>
+<p>
+    Follow the steps you think you need to fetch a single contact. We need to check
+    that the <code>contactEntity</code> is not <code>*Nothing</code> before binding
+    the request data and calling the repo <code>UpdateContact</code> method.
+    Check that the <code>ContactController</code> looks like this:
+</p>
+<div class="panel-group" id="contact-controller2-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contact-controller2-source" href="#contact-controller2-source-body">
+                    <code>App_Code\Controller\ContactController.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contact-controller2-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Collections.Generic
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass ContactController Access(*Public) Extends(Controller)
+
+    DclFld serviceRegistry Type(Registry) Access(*Private)
+
+    BegConstructor Access(*Public)
+        serviceRegistry = *New Registry()
+    EndConstructor
+
+    // IndexAction
+    // Path: /api/contacts
+    // Method: GET
+    BegFunc IndexAction Type(List(*Of Contact)) Access(*Public)
+
+        DclFld contacts Type(List(*Of Contact))
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contacts = contactRepo.FindContacts()
+
+        LeaveSr contacts
+    EndFunc
+
+    // ShowAction
+    // Path: /api/contacts/{id}
+    // Method: GET
+    BegFunc ShowAction Type(Contact) Access(*Public)
+        DclSrParm id Type(*Integer4)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = contactRepo.FindContact(id)
+
+        LeaveSr contactEntity
+    EndFunc
+
+    // CreateAction
+    // Path: /api/contacts
+    // Method: POST
+    BegFunc CreateAction Type(Contact) Access(*Public)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = *New Contact()
+
+        contactEntity.BindJsonData(*Base.GetRequestContent())
+
+        contactRepo.AddContact(contactEntity)
+
+        contactEntity = contactRepo.FindContactByEmail(contactEntity.email)
+
+        // Set the Location header and 201 status code
+        Http.Response.AddHeader("Location", "/contacts/" + contactEntity.id)
+        Http.Response.StatusCode = 201
+
+        LeaveSr contactEntity
+    EndFunc
+
+    // UpdateAction
+    // Path: /api/contacts/{id}
+    // Method: PUT
+    BegFunc UpdateAction Type(Contact) Access(*Public)
+        DclSrParm id Type(*Integer4)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = contactRepo.FindContact(id)
+
+        If (contactEntity &lt;&gt; *Nothing)
+            contactEntity.BindJsonData(*Base.GetRequestContent())
+
+            contactRepo.UpdateContact(contactEntity)
+        EndIf
+
+        LeaveSr contactEntity
+    EndFunc
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    Notice the path is the same as the <code>ShowAction</code>, but the HTTP method
+    will be <code>PUT</code>.
+</p>
+<p>
+    Finally, we will create a <code>DeleteAction</code> that will return type
+    <code>Contact</code> and receive an <code>id</code> parameter of type
+    <code>*Integer4</code>.
+</p>
+<p>
+    This method should look similar to the last one. Fetch a single contact and
+    if it is not <code>*Nothing</code>, send it to the repo <code>RemoveContact</code>
+    method and return the contact. The final <code>ContactController</code> class
+    should look like this:
+</p>
+<div class="panel-group" id="contact-controller3-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contact-controller3-source" href="#contact-controller3-source-body">
+                    <code>App_Code\Controller\ContactController.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contact-controller3-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Collections.Generic
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass ContactController Access(*Public) Extends(Controller)
+
+    DclFld serviceRegistry Type(Registry) Access(*Private)
+
+    BegConstructor Access(*Public)
+        serviceRegistry = *New Registry()
+    EndConstructor
+
+    // IndexAction
+    // Path: /api/contacts
+    // Method: GET
+    BegFunc IndexAction Type(List(*Of Contact)) Access(*Public)
+
+        DclFld contacts Type(List(*Of Contact))
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contacts = contactRepo.FindContacts()
+
+        LeaveSr contacts
+    EndFunc
+
+    // ShowAction
+    // Path: /api/contacts/{id}
+    // Method: GET
+    BegFunc ShowAction Type(Contact) Access(*Public)
+        DclSrParm id Type(*Integer4)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = contactRepo.FindContact(id)
+
+        LeaveSr contactEntity
+    EndFunc
+
+    // CreateAction
+    // Path: /api/contacts
+    // Method: POST
+    BegFunc CreateAction Type(Contact) Access(*Public)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = *New Contact()
+
+        contactEntity.BindJsonData(*Base.GetRequestContent())
+
+        contactRepo.AddContact(contactEntity)
+
+        contactEntity = contactRepo.FindContactByEmail(contactEntity.email)
+
+        // Set the Location header and 201 status code
+        Http.Response.AddHeader("Location", "/contacts/" + contactEntity.id)
+        Http.Response.StatusCode = 201
+
+        LeaveSr contactEntity
+    EndFunc
+
+    // UpdateAction
+    // Path: /api/contacts/{id}
+    // Method: PUT
+    BegFunc UpdateAction Type(Contact) Access(*Public)
+        DclSrParm id Type(*Integer4)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = contactRepo.FindContact(id)
+
+        If (contactEntity &lt;&gt; *Nothing)
+            contactEntity.BindJsonData(*Base.GetRequestContent())
+
+            contactRepo.UpdateContact(contactEntity)
+        EndIf
+
+        LeaveSr contactEntity
+    EndFunc
+
+    // DeleteAction
+    // Path: /api/contacts/{id}
+    // Method: DELETE
+    BegFunc DeleteAction Type(Contact) Access(*Public)
+        DclSrParm id Type(*Integer4)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = contactRepo.FindContact(id)
+
+        If (contactEntity &lt;&gt; *Nothing)
+            contactRepo.RemoveContact(contactEntity)
+        EndIf
+
+        LeaveSr contactEntity
+    EndFunc
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    The <code>DeleteAction</code> will use the <code>DELETE</code> HTTP method.
+    We need to add the new routes to <code>App_Code\Global.vr</code>. Add the new
+    routes by calling <code>Post</code>, <code>Put</code>, and <code>Delete</code>
+    when appropriate. The final <code>Global.vr</code> class should look like this:
+</p>
+<div class="panel-group" id="global-vr-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#global-vr-source" href="#global-vr-source-body">
+                    <code>App_Code\Global.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="global-vr-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Data
+Using System.Configuration
+Using System.Web
+Using System.Web.Routing
+Using System.Web.Security
+Using System.Web.UI
+Using System.Web.UI.WebControls
+Using System.Web.UI.WebControls.WebParts
+Using System.Web.UI.HtmlControls
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass Global Access(*Public) Extends(System.Web.HttpApplication)
+
+    BegSr Application_Start
+        DclSrParm sender Type(*Object)
+        DclSrParm e Type(EventArgs)
+
+        RegisterRoutes(RouteTable.Routes)
+    EndSr
+
+    BegSr RegisterRoutes
+        DclSrParm routes Type(RouteCollection)
+
+        DclFld appRouter Type(Router)
+
+        appRouter = *New Router(routes)
+
+        // ContactController routes
+        appRouter.Get("api/contacts", "IndexAction", *TypeOf(ContactController))
+        appRouter.Get("api/contacts/{id}", "ShowAction", *TypeOf(ContactController))
+        appRouter.Post("api/contacts", "CreateAction", *TypeOf(ContactController))
+        appRouter.Put("api/contacts/{id}", "UpdateAction", *TypeOf(ContactController))
+        appRouter.Delete("api/contacts/{id}", "DeleteAction", *TypeOf(ContactController))
+
+        // contacts.aspx catch-all route
+        appRouter.Page("{*path}", "default", "~/contacts.aspx")
+    EndSr
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    The JSON API is complete! This concludes the AVR portion of this project. If
+    you would like to see this become a Backbone application, click the
+    <strong>Next</strong> button below to continue when you are ready.
+</p>
 <hr>
 <ul class="pager">
     <li class="previous"><a href="/Lab2014.SinglePageApp/#tutorial/part-5-show" data-asna-nav="route:tutorial:show">&larr; Previous</a></li>

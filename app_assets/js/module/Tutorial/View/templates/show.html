@@ -1,6 +1,166 @@
 <div class="page-header">
     <h2>Part 5: Show</h2>
 </div>
+<p>
+    The show action will fetch and return a single contact. This part of the tutorial
+    is even more simple than the last one. Open
+    <code>App_Code\Controller\ContactController.vr</code> and add a public
+    <code>ShowAction</code> method. It will return an object of type
+    <code>Contact</code> and will receive a parameter <code>id</code> of type
+    <code>*Integer4</code>.
+</p>
+<p>
+    Declare a <code>contactEntity</code> variable of type <code>Contact</code>.
+    Declare a <code>contactRepo</code> variable of type <code>IContactRepository</code>.
+    Set the <code>contactRepo</code> by calling the <code>GetContactRepository()</code>
+    method on the <code>Registry</code> object. Set the <code>contactEntity</code>
+    by calling <code>contactRepo.FindContact(id)</code>. Notice we need to pass the
+    <code>id</code> to the <code>FindContact</code> method. We then return the
+    <code>contactEntity</code>.
+</p>
+<div class="alert alert-info">
+    Note: <code>contactRepo.FindContact(id)</code> may return <code>*Nothing</code>
+    if the <code>id</code> is invalid. The base <code>Controller</code> class will
+    recognize <code>*Nothing</code>, and return a <code>404 - Not Found</code> response.
+</div>
+<p>
+    The <code>ContactController.vr</code> class should look like this:
+</p>
+<div class="panel-group" id="contact-controller-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contact-controller-source" href="#contact-controller-source-body">
+                    <code>App_Code\Controller\ContactController.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contact-controller-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Collections.Generic
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass ContactController Access(*Public) Extends(Controller)
+
+    DclFld serviceRegistry Type(Registry) Access(*Private)
+
+    BegConstructor Access(*Public)
+        serviceRegistry = *New Registry()
+    EndConstructor
+
+    // IndexAction
+    // Path: /api/contacts
+    // Method: GET
+    BegFunc IndexAction Type(List(*Of Contact)) Access(*Public)
+
+        DclFld contacts Type(List(*Of Contact))
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contacts = contactRepo.FindContacts()
+
+        LeaveSr contacts
+    EndFunc
+
+    // ShowAction
+    // Path: /api/contacts/{id}
+    // Method: GET
+    BegFunc ShowAction Type(Contact) Access(*Public)
+        DclSrParm id Type(*Integer4)
+
+        DclFld contactEntity Type(Contact)
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contactEntity = contactRepo.FindContact(id)
+
+        LeaveSr contactEntity
+    EndFunc
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    Again, we&rsquo;ve noted the path <code>/api/contacts/{id}</code> and method
+    <code>GET</code> for the show action. Add the new route to
+    <code>App_Code\Global.vr</code>:
+</p>
+<pre class="prettyprint">
+appRouter.Get("api/contacts/{id}", "ShowAction", *TypeOf(ContactController))
+</pre>
+<p>
+    Since the <code>ShowAction</code> has a parameter with the name <code>id</code>
+    that is of type <code>*Integer4</code>, the base controller class will cast
+    the URL parameter for us. URL parameters are all strings, but controller actions
+    can receive other scalar types as arguments. The <code>Global.vr</code> file
+    should look like this:
+</p>
+<div class="panel-group" id="global-vr-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#global-vr-source" href="#global-vr-source-body">
+                    <code>App_Code\Global.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="global-vr-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Data
+Using System.Configuration
+Using System.Web
+Using System.Web.Routing
+Using System.Web.Security
+Using System.Web.UI
+Using System.Web.UI.WebControls
+Using System.Web.UI.WebControls.WebParts
+Using System.Web.UI.HtmlControls
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass Global Access(*Public) Extends(System.Web.HttpApplication)
+
+    BegSr Application_Start
+        DclSrParm sender Type(*Object)
+        DclSrParm e Type(EventArgs)
+
+        RegisterRoutes(RouteTable.Routes)
+    EndSr
+
+    BegSr RegisterRoutes
+        DclSrParm routes Type(RouteCollection)
+
+        DclFld appRouter Type(Router)
+
+        appRouter = *New Router(routes)
+
+        // ContactController routes
+        appRouter.Get("api/contacts", "IndexAction", *TypeOf(ContactController))
+        appRouter.Get("api/contacts/{id}", "ShowAction", *TypeOf(ContactController))
+
+        // contacts.aspx catch-all route
+        appRouter.Page("{*path}", "default", "~/contacts.aspx")
+    EndSr
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    Now we can fetch all of the contacts and a single contact from our JSON API.
+    In the next part, we will add methods to create, update, and delete contacts.
+</p>
+<p>
+    Click the <strong>Next</strong> button below to continue when you are ready.
+</p>
 <hr>
 <ul class="pager">
     <li class="previous"><a href="/Lab2014.SinglePageApp/#tutorial/part-4-index" data-asna-nav="route:tutorial:index">&larr; Previous</a></li>
