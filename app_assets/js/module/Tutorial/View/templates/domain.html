@@ -1,0 +1,539 @@
+<div class="page-header">
+    <h2>Part 1: Domain</h2>
+</div>
+<p>
+    Creating a domain model is the first (and most important step) in building a
+    good web application. Since this contacts application is a very simple example,
+    we will not be concerned with real business logic.
+</p>
+<p>
+    The application classes will live in various folders within the <code>App_Code</code>
+    folder. To create the folder, right-click on the website name in the Visual Studio
+    Solution Explorer. Hover over &ldquo;<strong>Add</strong>&rdquo; and then hover
+    over &ldquo;<strong>Add ASP.NET Folder</strong>&rdquo;. Click on
+    &ldquo;<strong>App_Code</strong>&rdquo;.
+</p>
+<p>
+    Create a <code>Domain</code> folder. Right-click on the <code>App_Code</code>
+    folder within the Solution Explorer. Hover over &ldquo;<strong>Add</strong>&rdquo;
+    and then click on &ldquo;<strong>New Folder</strong>&rdquo;. Name the new folder
+    &ldquo;<strong>Domain</strong>&rdquo; and press <code>Enter</code>.
+</p>
+<p>
+    Our domain model will only consist of a simple
+    <a href="http://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model"><strong>Contact</strong> entity</a>,
+    and a <a href="http://martinfowler.com/eaaCatalog/repository.html"><strong>Repository</strong> interface</a>.
+    A real-world <a href="http://martinfowler.com/eaaCatalog/domainModel.html">Domain Model</a>
+    should contain the core business logic of an application. With our simple
+    application, we are not implementing
+    <a href="http://dddcommunity.org/learning-ddd/what_is_ddd/">Domain Driven Design</a>, so an
+    <a href="http://www.martinfowler.com/bliki/AnemicDomainModel.html">anemic domain model</a>
+    is not as bad as it would be on a large project.
+</p>
+<p>
+    Why bother? Defining our Contact as a strongly typed data structure provides
+    IntelliSense in Visual Studio and compile-time safety of our data. Creating a
+    Repository interface provides a simple contract that we can use to create,
+    fetch, update, and delete contacts. In <a href="/Lab2014.SinglePageApp/#tutorial/part-2-data" data-asna-nav="route:tutorial:data">part 2</a>
+    we will see how this allows us to change databases without changing most of the
+    code.
+</p>
+<h3>Contact Entity</h3>
+<p>
+    The Contact entity starts as a plain AVR class. Right-click on the <code>Domain</code>
+    folder in the Solution Explorer. Hover over &ldquo;<strong>Add</strong>&rdquo; and
+    click &ldquo;<strong>Class</strong>&rdquo;. At the prompt, enter <strong>Contact</strong>
+    and click &ldquo;<strong>Ok</strong>&rdquo;. Replace the contents of the new
+    file with a basic class declaration:
+</p>
+<div class="panel-group" id="contactentity-start">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contactentity-start" href="#contactentity-start-body">
+                    <code>App_Code\Domain\Contact.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contactentity-start-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+
+BegClass Contact Access(*Public)
+
+    // TODO: Add properties
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    Each property consists of a simple getter and setter:
+</p>
+<pre class="prettyprint">
+DclFld _id Type(*Integer4) Access(*Protected)
+BegProp id Type(*Integer4) Access(*Public)
+    BegSet
+        _id = *PropVal
+    EndSet
+    BegGet
+        LeaveSr _id
+    EndGet
+EndProp
+</pre>
+<p>
+    Each contact needs to support the following values:
+</p>
+<ul>
+    <li>id (integer)</li>
+    <li>company (string)</li>
+    <li>firstName (string)</li>
+    <li>lastName (string)</li>
+    <li>email (string)</li>
+    <li>phone (string)</li>
+    <li>address1 (string)</li>
+    <li>address2 (string)</li>
+    <li>city (string)</li>
+    <li>state (string)</li>
+    <li>postalCode (string)</li>
+</ul>
+<p>
+    Once the properties are defined, the Contact class should look like this:
+</p>
+<div class="panel-group" id="contactentity-properties">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contactentity-properties" href="#contactentity-properties-body">
+                    <code>App_Code\Domain\Contact.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contactentity-properties-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+
+BegClass Contact Access(*Public)
+
+    DclFld _id Type(*Integer4) Access(*Protected)
+    BegProp id Type(*Integer4) Access(*Public)
+        BegSet
+            _id = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _id
+        EndGet
+    EndProp
+
+    DclFld _company Type(*String) Access(*Protected)
+    BegProp company Type(*String) Access(*Public)
+        BegSet
+            _company = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _company
+        EndGet
+    EndProp
+
+    DclFld _firstName Type(*String) Access(*Protected)
+    BegProp firstName Type(*String) Access(*Public)
+        BegSet
+            _firstName = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _firstName
+        EndGet
+    EndProp
+
+    DclFld _lastName Type(*String) Access(*Protected)
+    BegProp lastName Type(*String) Access(*Public)
+        BegSet
+            _lastName = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _lastName
+        EndGet
+    EndProp
+
+    DclFld _email Type(*String) Access(*Protected)
+    BegProp email Type(*String) Access(*Public)
+        BegSet
+            _email = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _email
+        EndGet
+    EndProp
+
+    DclFld _phone Type(*String) Access(*Protected)
+    BegProp phone Type(*String) Access(*Public)
+        BegSet
+            _phone = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _phone
+        EndGet
+    EndProp
+
+    DclFld _address1 Type(*String) Access(*Protected)
+    BegProp address1 Type(*String) Access(*Public)
+        BegSet
+            _address1 = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _address1
+        EndGet
+    EndProp
+
+    DclFld _address2 Type(*String) Access(*Protected)
+    BegProp address2 Type(*String) Access(*Public)
+        BegSet
+            _address2 = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _address2
+        EndGet
+    EndProp
+
+    DclFld _city Type(*String) Access(*Protected)
+    BegProp city Type(*String) Access(*Public)
+        BegSet
+            _city = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _city
+        EndGet
+    EndProp
+
+    DclFld _state Type(*String) Access(*Protected)
+    BegProp state Type(*String) Access(*Public)
+        BegSet
+            _state = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _state
+        EndGet
+    EndProp
+
+    DclFld _postalCode Type(*String) Access(*Protected)
+    BegProp postalCode Type(*String) Access(*Public)
+        BegSet
+            _postalCode = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _postalCode
+        EndGet
+    EndProp
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    Since the contact data will come in as a <a href="http://json.org/">JSON</a>
+    string, let&rsquo;s add a method to set all of the properties from JSON. With
+    Using statements for <code>System.Collections.Generic</code>,
+    <code>System.Web.Script.Serialization</code>, and the new method, the final
+    class looks like this:
+</p>
+<div class="panel-group" id="contactentity-complete">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contactentity-complete" href="#contactentity-complete-body">
+                    <code>App_Code\Domain\Contact.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contactentity-complete-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Collections.Generic
+Using System.Web.Script.Serialization
+
+BegClass Contact Access(*Public)
+
+    DclFld _id Type(*Integer4) Access(*Protected)
+    BegProp id Type(*Integer4) Access(*Public)
+        BegSet
+            _id = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _id
+        EndGet
+    EndProp
+
+    DclFld _company Type(*String) Access(*Protected)
+    BegProp company Type(*String) Access(*Public)
+        BegSet
+            _company = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _company
+        EndGet
+    EndProp
+
+    DclFld _firstName Type(*String) Access(*Protected)
+    BegProp firstName Type(*String) Access(*Public)
+        BegSet
+            _firstName = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _firstName
+        EndGet
+    EndProp
+
+    DclFld _lastName Type(*String) Access(*Protected)
+    BegProp lastName Type(*String) Access(*Public)
+        BegSet
+            _lastName = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _lastName
+        EndGet
+    EndProp
+
+    DclFld _email Type(*String) Access(*Protected)
+    BegProp email Type(*String) Access(*Public)
+        BegSet
+            _email = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _email
+        EndGet
+    EndProp
+
+    DclFld _phone Type(*String) Access(*Protected)
+    BegProp phone Type(*String) Access(*Public)
+        BegSet
+            _phone = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _phone
+        EndGet
+    EndProp
+
+    DclFld _address1 Type(*String) Access(*Protected)
+    BegProp address1 Type(*String) Access(*Public)
+        BegSet
+            _address1 = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _address1
+        EndGet
+    EndProp
+
+    DclFld _address2 Type(*String) Access(*Protected)
+    BegProp address2 Type(*String) Access(*Public)
+        BegSet
+            _address2 = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _address2
+        EndGet
+    EndProp
+
+    DclFld _city Type(*String) Access(*Protected)
+    BegProp city Type(*String) Access(*Public)
+        BegSet
+            _city = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _city
+        EndGet
+    EndProp
+
+    DclFld _state Type(*String) Access(*Protected)
+    BegProp state Type(*String) Access(*Public)
+        BegSet
+            _state = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _state
+        EndGet
+    EndProp
+
+    DclFld _postalCode Type(*String) Access(*Protected)
+    BegProp postalCode Type(*String) Access(*Public)
+        BegSet
+            _postalCode = *PropVal
+        EndSet
+        BegGet
+            LeaveSr _postalCode
+        EndGet
+    EndProp
+
+    BegSr BindJsonData Access(*Public)
+        DclSrParm Content Type(*String)
+
+        DclFld Serializer Type(JavaScriptSerializer) New()
+        DclFld Data Type(Dictionary(*Of *String, *String))
+
+        Data = Serializer.Deserialize(Content, *TypeOf(Dictionary(*Of *String, *String))) *As Dictionary(*Of *String, *String)
+
+        If (Data.ContainsKey("company"))
+            company = Data["company"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("firstName"))
+            firstName = Data["firstName"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("lastName"))
+            lastName = Data["lastName"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("email"))
+            email = Data["email"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("phone"))
+            phone = Data["phone"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("address1"))
+            address1 = Data["address1"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("address2"))
+            address2 = Data["address2"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("city"))
+            city = Data["city"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("state"))
+            state = Data["state"].Trim()
+        EndIf
+
+        If (Data.ContainsKey("postalCode"))
+            postalCode = Data["postalCode"].Trim()
+        EndIf
+    EndSr
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<h3>Contact Repository</h3>
+<p>
+    The repository will define how we expect to interact with contacts. In this case,
+    the requirements are simple.
+</p>
+<p>
+    Right-click on the <code>Domain</code> folder in the solution explorer. Hover
+    over &ldquo;<strong>Add</strong>&rdquo; and click &ldquo;<strong>Class</strong>&rdquo;.
+    At the prompt, enter <strong>IContactRepository</strong> and click
+    &ldquo;<strong>Ok</strong>&rdquo;. Replace the contents of the new file with
+    a basic interface declaration:
+</p>
+<div class="panel-group" id="icontactrepository-start">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#icontactrepository-start" href="#icontactrepository-start-body">
+                    <code>App_Code\Domain\IContactRepository.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="icontactrepository-start-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+
+BegInterface IContactRepository
+
+    // TODO: Add methods
+
+EndInterface
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    An interface contains only method signatures. We would like to be able to
+    perform the following operations:
+</p>
+<ul>
+    <li>Retrieve all of the contacts (as a list)</li>
+    <li>Retrieve a contact with a given id</li>
+    <li>Retrieve a contact with a given email</li>
+    <li>Add a new contact</li>
+    <li>Update an existing contact</li>
+    <li>Remove an existing contact</li>
+</ul>
+<p>
+    Notice we do not need to know where the contacts come from, or where they are
+    saved, but we can assume they are stored somewhere (like a database).
+</p>
+<p>
+    Adding a using statement with <code>System.Collections.Generic</code> and the
+    new methods should result in a complete interface:
+</p>
+<div class="panel-group" id="icontactrepository-complete">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#icontactrepository-complete" href="#icontactrepository-complete-body">
+                    <code>App_Code\Domain\IContactRepository.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="icontactrepository-complete-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Collections.Generic
+
+BegInterface IContactRepository
+
+    BegFunc FindContacts Type(List(*Of Contact))
+    EndFunc
+
+    BegFunc FindContact Type(Contact)
+        DclSrParm id Type(*Integer4)
+    EndFunc
+
+    BegFunc FindContactByEmail Type(Contact)
+        DclSrParm email Type(*String)
+    EndFunc
+
+    BegSr AddContact
+        DclSrParm contactEntity Type(Contact)
+    EndSr
+
+    BegSr UpdateContact
+        DclSrParm contactEntity Type(Contact)
+    EndSr
+
+    BegSr RemoveContact
+        DclSrParm contactEntity Type(Contact)
+    EndSr
+
+EndInterface
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    In the next step, we will map the domain layer to a database. Click the
+    <strong>Next</strong> button below to continue.
+</p>
+<hr>
+<ul class="pager">
+    <li class="previous"><a href="/Lab2014.SinglePageApp/#tutorial/part-0-start" data-asna-nav="route:tutorial:start">&larr; Previous</a></li>
+    <li class="next"><a href="/Lab2014.SinglePageApp/#tutorial/part-2-data" data-asna-nav="route:tutorial:data">Next &rarr;</a></li>
+</ul>
+<hr>

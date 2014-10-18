@@ -1,0 +1,114 @@
+<div class="page-header">
+    <h2>Part 0: Start</h2>
+</div>
+<p>
+    This part of the tutorial contains instructions for installing the empty
+    project template. You should already have Visual Studio 2012 and ASNA
+    Visual RPG for .NET installed.
+</p>
+<div class="alert alert-info text-center">
+    Visual Studio <a href="http://www.visualstudio.com/downloads/download-visual-studio-vs">can be downloaded from here</a>.<br>
+    ASNA Visual RPG for .NET <a href="http://devnet.asna.com/">is available at the ASNA Developer Network</a>.
+</div>
+<div class="row">
+    <div class="col-sm-6 col-sm-push-6 clearfix">
+        <a class="btn btn-social btn-github pull-right" style="margin-top:16px;" href="https://github.com/ASNApalooza/Lab2014.SinglePageApp/archive/part-0-start.zip" download="Lab2014.SinglePageApp-part-0-start.zip">
+            <span class="fa fa-download"></span> Download
+        </a>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        <h3>Installation</h3>
+    </div>
+</div>
+<p>
+    Download the project template using the button above, then move the zip file
+    to your projects folder.
+</p>
+<p>
+    Unzip the file and rename the extracted folder from
+    <code>Lab2014.SinglePageApp-part-0-start</code> to <code>SinglePageApp</code>.
+</p>
+<p>
+    You should now have a <code>SinglePageApp</code> folder that contains
+    the following structure:
+</p>
+<pre>
+SinglePageApp
+|   .gitignore
+|   favicon.ico
+|   README.md
+|   Web.config
+|   Web.Debug.config
+|
+\---App_Data
+        Application.mdf
+        Application_log.ldf
+        ContactSeeder.zip
+        dbo.Contacts.sql
+</pre>
+<p>
+    The App_Data folder contains an SQL database as an alternative to the
+    local DataGate database. The database layer is covered in
+    <a href="/Lab2014.BootstrapApp/#tutorial/part-2-data" data-asna-nav="route:tutorial:data">part 2</a>
+    of the tutorial.
+</p>
+<p>
+    The <code>.gitignore</code> and <code>README.md</code> files are used
+    by the <a href="http://git-scm.com/">Git</a> repository.
+</p>
+<p>
+    The <code>Web.config</code> file is mostly empty other than a
+    <a href="http://msdn.microsoft.com/en-us/library/vstudio/ms178411%28v=vs.100%29.aspx">connection string</a>
+    for the SQL database:
+</p>
+<div class="panel-group" id="webconfig-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#webconfig-source" href="#webconfig-source-body">
+                    <code>Web.config</code>
+                </a>
+            </h4>
+        </div>
+        <div id="webconfig-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+&lt;?xml version="1.0"?&gt;
+&lt;!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  --&gt;
+&lt;configuration&gt;
+  &lt;connectionStrings&gt;
+    &lt;add name="Application" providerName="System.Data.SqlClient" connectionString="Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Application.mdf;Integrated Security=True" /&gt;
+  &lt;/connectionStrings&gt;
+  &lt;system.web&gt;
+    &lt;compilation debug="true" targetFramework="4.5" /&gt;
+  &lt;/system.web&gt;
+  &lt;system.webServer&gt;
+    &lt;modules runAllManagedModulesForAllRequests="true" /&gt;
+  &lt;/system.webServer&gt;
+&lt;/configuration&gt;
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    The <code>favicon.ico</code> file provides a simple bookmark icon for
+    the project.
+</p>
+<p>
+    Open Visual Studio and then click &ldquo;<strong>FILE</strong>&rdquo;
+    then &ldquo;<strong>Open Web Site...</strong>&rdquo; on the menu bar.
+    Browse to the SinglePageApp folder and click &ldquo;<strong>OPEN</strong>&rdquo;.
+</p>
+<p>
+    Once the website loads, we can move on and get started. Click the
+    <strong>Next</strong> button below to continue.
+</p>
+<hr>
+<ul class="pager">
+    <li class="next"><a href="/Lab2014.SinglePageApp/#tutorial/part-1-domain" data-asna-nav="route:tutorial:domain">Next &rarr;</a></li>
+</ul>
+<hr>

@@ -1,0 +1,448 @@
+<div class="page-header">
+    <h2>Part 3: Page</h2>
+</div>
+<p>
+    We will need to download some static assets for our project. Start by creating
+    a new <code>Assets</code> folder in the website root.
+</p>
+<div class="alert alert-info">
+    Organizing all of the static assets (images, fonts, css, and javascript) in
+    a subfolder is a good way to keep the root directory clean.
+</div>
+<div class="row">
+    <div class="col-sm-6 col-sm-push-6 clearfix">
+        <a class="btn btn-social btn-github pull-right" style="margin-top:16px;" href="https://github.com/twbs/bootstrap/archive/v3.2.0.zip" download="bootstrap-3.2.0.zip">
+            <span class="fa fa-download"></span> Download
+        </a>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        <h3><a href="http://getbootstrap.com/">Bootstrap</a></h3>
+    </div>
+</div>
+<blockquote>
+Bootstrap is the most popular HTML, CSS, and JS framework for developing
+responsive, mobile first projects on the web.
+</blockquote>
+<p>
+    Click on the download button above to download version 3.2.0. Move the
+    downloaded zip file to the new <code>Assets</code> folder.
+</p>
+<p>
+    Unzip the file, and you should have a folder named <code>bootstrap-3.2.0</code>.
+    We are only concerned with the files in the <code>dist</code> folder. Browse
+    to <code>bootstrap-3.2.0\dist</code> in the File Explorer, and you should see
+    three folders named css, fonts, and js. Highlight and copy all three folders
+    and browse back to the project <code>Assets</code> folder. Paste the copied
+    folders and then delete the <code>bootstrap-3.2.0</code> folder and
+    <code>bootstrap-3.2.0.zip</code> file.
+</p>
+<p>
+    Many projects will have more JavaScript files, so I normally create folders
+    to organize those files as well. Create a <code>vendor</code> folder within
+    the <code>js</code> folder, and move the Bootstrap JavaScript files there.
+</p>
+<div class="row">
+    <div class="col-sm-6 col-sm-push-6 clearfix">
+        <a class="btn btn-social btn-github pull-right" style="margin-top:16px;" href="https://github.com/jquery/jquery/archive/1.11.1.zip" download="jquery-1.11.1.zip">
+            <span class="fa fa-download"></span> Download
+        </a>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        <h3><a href="http://jquery.com/">jQuery</a></h3>
+    </div>
+</div>
+<blockquote>
+jQuery is a fast, small, and feature-rich JavaScript library. It makes things
+like HTML document traversal and manipulation, event handling, animation, and
+Ajax much simpler with an easy-to-use API that works across a multitude of
+browsers. With a combination of versatility and extensibility, jQuery has
+changed the way that millions of people write JavaScript.
+</blockquote>
+<p>
+    Bootstrap and Backbone depend on the jQuery library. Click on the download
+    button above to download version 1.11.1 of the library. Move the zip file
+    into the project <code>Assets</code> folder and unzip the file. Browse to the
+    <code>jquery-1.11.1\dist</code> folder and copy the two JavaScript files.
+    Paste the copied files into the project <code>Assets\js\vendor</code> folder.
+    Delete the zip file and <code>jquery-1.11.1</code> folder.
+</p>
+<div class="row">
+    <div class="col-sm-6 col-sm-push-6 clearfix">
+        <a class="btn btn-social btn-github pull-right" style="margin-top:16px;" href="https://github.com/jashkenas/underscore/archive/1.7.0.zip" download="underscore-1.7.0.zip">
+            <span class="fa fa-download"></span> Download
+        </a>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        <h3><a href="http://underscorejs.org/">Underscore</a></h3>
+    </div>
+</div>
+<blockquote>
+Underscore is a JavaScript library that provides a whole mess of useful
+functional programming helpers without extending any built-in objects. It&rsquo;s
+the answer to the question: &ldquo;If I sit down in front of a blank HTML page, and
+want to start being productive immediately, what do I need?&rdquo; &hellip; and
+the tie to go along with jQuery&rsquo;s tux and Backbone&rsquo;s suspenders.
+</blockquote>
+<p>
+    Backbone depends on the Underscore library. Even if it didn&rsquo;t, we would
+    use it anyways&hellip; it&rsquo; that good. Click on the download button above
+    to download version 1.7.0 of the library. Move the zip file into the project
+    <code>Assets</code> folder and unzip the file. The files we need are in the
+    root of the <code>underscore-1.7.0</code> folder. Copy <code>underscore.js</code>
+    and <code>underscore-min.js</code> and paste them into the project
+    <code>Assets\js\vendor</code> folder. Delete the zip file and
+    <code>underscore-1.7.0</code> folder.
+</p>
+<div class="row">
+    <div class="col-sm-6 col-sm-push-6 clearfix">
+        <a class="btn btn-social btn-github pull-right" style="margin-top:16px;" href="https://github.com/jashkenas/backbone/archive/1.1.2.zip" download="backbone-1.1.2.zip">
+            <span class="fa fa-download"></span> Download
+        </a>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        <h3><a href="http://backbonejs.org/">Backbone</a></h3>
+    </div>
+</div>
+<blockquote>
+Backbone.js gives structure to web applications by providing models with
+key-value binding and custom events, collections with a rich API of enumerable
+functions, views with declarative event handling, and connects it all to your
+existing API over a RESTful JSON interface.
+</blockquote>
+<p>
+    Backbone is the framework we will use to build the JavaScript application.
+    Click on the download button above to download version 1.1.2 of Backbone. Move
+    the zip file into the project <code>Assets</code> folder and unzip the file.
+    Copy <code>backbone.js</code> and <code>backbone-min.js</code> in the root of
+    the <code>backbone-1.1.2</code> folder and paste them into the project
+    <code>Assets\js\vendor</code> folder. Delete the zip file and
+    <code>backbone-1.1.2</code> folder.
+</p>
+<div class="row">
+    <div class="col-sm-6 col-sm-push-6 clearfix">
+        <a class="btn btn-social btn-github pull-right" style="margin-top:16px;" href="https://github.com/marionettejs/backbone.syphon/archive/v0.5.0.zip" download="backbone.syphon-0.5.0.zip">
+            <span class="fa fa-download"></span> Download
+        </a>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        <h3><a href="https://github.com/marionettejs/backbone.syphon">Backbone Syphon</a></h3>
+    </div>
+</div>
+<blockquote>
+Backbone.Syphon aims to make it easy to serialize the form inputs of a
+Backbone.View in to a simple JSON object that contains all of the values from
+the form.
+</blockquote>
+<p>
+    Backbone.Syphon is a useful library that we will use to read form values into
+    a JavaScript object. Click the download button above to download version 0.5.0
+    of the library. Move the zip file into the project <code>Assets</code> folder
+    and unzip the file. Navigate to the <code>backbone.syphon-0.5.0\lib</code> folder
+    and copy the two JavaScript files there. Paste the copied files into the
+    <code>Assets\js\vendor</code> folder. Delete the zip file and
+    <code>backbone.syphon-0.5.0</code> folder.
+</p>
+<p>
+    For consistency, navigate to the <code>Assets\js\vendor</code> folder and rename
+    <code>backbone-min.js</code> to <code>backbone.min.js</code>. Also rename
+    <code>underscore-min.js</code> to <code>underscore.min.js</code>. This just makes
+    those filenames easier to remember if we need to type them out.
+</p>
+<p>
+    Back in Visual Studio, you may need to click on the website name in the
+    Solution Explorer and then click the refresh button to see the new folders.
+    We need to create a simple CSS file (optional), and one JavaScript file.
+</p>
+<p>
+    In the solution explorer, open the <code>Assets</code> folder, and the
+    <code>css</code> folder. Right-click on the <code>css</code> folder, hover
+    over &ldquo;<strong>Add</strong>&rdquo; and click
+    &ldquo;<strong>Add New Item...</strong>&rdquo;. When prompted, scroll to find
+    Style Sheet and select it. Change the name to <code>main.css</code> and click
+    &ldquo;<strong>Add</strong>&rdquo;. Replace the contents of the new file with
+    this simple CSS rule:
+</p>
+<div class="panel-group" id="main-css-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#main-css-source" href="#main-css-source-body">
+                    <code>Assets\css\main.css</code>
+                </a>
+            </h4>
+        </div>
+        <div id="main-css-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+.navbar {
+    margin-bottom: 0;
+}
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    This simply removes the margin on the bottom of the Bootstrap navbar control.
+    While Twitter Bootstrap provides great CSS styles, you can easily extend or
+    change any of those styles. Just be sure to load custom styles after the
+    Bootstrap stylesheets.
+</p>
+<p>
+    Back in the Solution Explorer, open the <code>js</code> folder. Right-click on
+    the <code>js</code> folder, hover over &ldquo;<strong>Add</strong>&rdquo; and
+    click &ldquo;<strong>Add New Item...</strong>&rdquo;. When prompted, scroll
+    to find JavaScript File and select it. Change the name to
+    <code>main.js</code> and click &ldquo;<strong>Add</strong>&rdquo;. Leave this
+    file empty for now.
+</p>
+<p>
+    You should have an <code>Assets</code> folder with the following structure:
+</p>
+<pre>
+Assets
++---css
+|       bootstrap-theme.css
+|       bootstrap-theme.css.map
+|       bootstrap-theme.min.css
+|       bootstrap.css
+|       bootstrap.css.map
+|       bootstrap.min.css
+|       main.css
+|
++---fonts
+|       glyphicons-halflings-regular.eot
+|       glyphicons-halflings-regular.svg
+|       glyphicons-halflings-regular.ttf
+|       glyphicons-halflings-regular.woff
+|
+\---js
+    |   main.js
+    |
+    \---vendor
+            backbone-min.js
+            backbone.js
+            backbone.syphon.js
+            backbone.syphon.min.js
+            bootstrap.js
+            bootstrap.min.js
+            jquery.js
+            jquery.min.js
+            underscore-min.js
+            underscore.js
+</pre>
+<h3>contacts.aspx</h3>
+<p>
+    Create a new ASPX page in the website root. In the Solution Explorer,
+    right-click on the website root folder, hover over &ldquo;<strong>Add</strong>&rdquo;
+    and click &ldquo;<strong>Add New Item...</strong>&rdquo;. At the prompt, scroll
+    down to find Web Form and select it. Change the name to <code>contacts.aspx</code>
+    and make sure the &ldquo;Select master page&rdquo; checkbox is
+    <strong>not</strong> checked. Make sure the name is lower-case, then click
+    &ldquo;<strong>Add</strong>&rdquo;.
+</p>
+<p>
+    Replace the contents of the new file with the following markup:
+</p>
+<div class="panel-group" id="contacts-aspx-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contacts-aspx-source" href="#contacts-aspx-source-body">
+                    <code>contacts.aspx</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contacts-aspx-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+&lt;%@ Page Language="AVR" AutoEventWireup="false" CodeFile="contacts.aspx.vr" Inherits="contacts"
+%&gt;&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
+    &lt;title&gt;Contacts&lt;/title&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+    &lt;link href="&lt;%= Page.ResolveUrl("~") %&gt;Assets/css/bootstrap.css" rel="stylesheet" /&gt;
+    &lt;link href="&lt;%= Page.ResolveUrl("~") %&gt;Assets/css/bootstrap-theme.css" rel="stylesheet" /&gt;
+    &lt;link href="&lt;%= Page.ResolveUrl("~") %&gt;Assets/css/main.css" rel="stylesheet" /&gt;
+&lt;/head&gt;
+&lt;body role="application"&gt;
+&lt;div id="wrapper" class="wrapper"&gt;
+&lt;/div&gt;&lt;!-- #wrapper --&gt;
+&lt;script&gt;
+(function (globals) {
+    var App = globals.App = {};
+    App.config = { baseUrl: "&lt;%= Page.ResolveUrl("~") %&gt;" };
+})(this);
+&lt;/script&gt;
+&lt;script src="&lt;%= Page.ResolveUrl("~") %&gt;Assets/js/vendor/jquery.js"&gt;&lt;/script&gt;
+&lt;script src="&lt;%= Page.ResolveUrl("~") %&gt;Assets/js/vendor/underscore.js"&gt;&lt;/script&gt;
+&lt;script src="&lt;%= Page.ResolveUrl("~") %&gt;Assets/js/vendor/backbone.js"&gt;&lt;/script&gt;
+&lt;script src="&lt;%= Page.ResolveUrl("~") %&gt;Assets/js/vendor/backbone.syphon.js"&gt;&lt;/script&gt;
+&lt;script src="&lt;%= Page.ResolveUrl("~") %&gt;Assets/js/vendor/bootstrap.js"&gt;&lt;/script&gt;
+&lt;script src="&lt;%= Page.ResolveUrl("~") %&gt;Assets/js/main.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    This page include some basic <a href="http://html5boilerplate.com/">HTML5 boilerplate</a>
+    and loads the CSS and JavaScript files our application will need. In addition,
+    we included some JavaScript that creates a global <code>App</code> object that
+    has the <code>baseUrl</code> available. We will use that value later.
+</p>
+<h3>Global.asax</h3>
+<p>
+    We need a way to set up some routing based on URLs that will not match up with
+    page names directly. For example, we need to be able to serve the
+    <code>contacts.aspx</code> file for different URLs. We can then let the JavaScript
+    load the correct content into the page.
+</p>
+<p>
+    Right-click on the website root in the Solution Explorer. Hover over
+    &ldquo;<strong>Add</strong>&rdquo; then click on
+    &ldquo;<strong>Global Application Class</strong>&rdquo;. Keep the name the
+    default <code>Global</code> and click &ldquo;<strong>OK</strong>&rdquo;.
+    You should see a new file that looks like an ASPX page with some methods defined.
+    That&rsquo;s not exactly what we want, so replace the contents of the new file with
+    this line:
+</p>
+<pre class="prettyprint">
+&lt;%@ Application Language="AVR" CodeBehind="App_Code/Global.vr" Inherits="Global" %&gt;
+</pre>
+<p>
+    Save <code>Global.asax</code> and close it. Create a new class in the
+    <code>App_Code</code> folder called <code>Global.vr</code>. Add Using statements
+    for <code>System.Web.Routing</code> and <code>ASNA.Palooza.Lab2014.JsonLib</code>.
+    Delete the comments and constructor and add this extends statement:
+</p>
+<pre class="prettyprint">
+BegClass Global Access(*Public) <strong>Extends(System.Web.HttpApplication)</strong>
+</pre>
+<p>
+    We need to add a method to set up any routes. Create a method called
+    <code>RegisterRoutes</code> and declare a parameter called <code>routes</code>
+    which will be of type <code>RouteCollection</code>. Now declare a variable named
+    <code>appRouter</code> of type <code>Router</code>, which is a class in our
+    <code>JsonLib</code> library. When we create the <code>Router</code> instance,
+    we need to pass <code>routes</code> into the constructor. We can now define
+    some routes. Our first route will catch all requests, and direct them to
+    <code>contacts.aspx</code>. The class looks like this so far:
+</p>
+<div class="panel-group" id="global-vr1-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#global-vr1-source" href="#global-vr1-source-body">
+                    <code>App_Code\Global.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="global-vr1-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Data
+Using System.Configuration
+Using System.Web
+Using System.Web.Routing
+Using System.Web.Security
+Using System.Web.UI
+Using System.Web.UI.WebControls
+Using System.Web.UI.WebControls.WebParts
+Using System.Web.UI.HtmlControls
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass Global Access(*Public) Extends(System.Web.HttpApplication)
+
+    BegSr RegisterRoutes
+        DclSrParm routes Type(RouteCollection)
+
+        DclFld appRouter Type(Router)
+
+        appRouter = *New Router(routes)
+
+        // contacts.aspx catch-all route
+        appRouter.Page("{*path}", "default", "~/contacts.aspx")
+    EndSr
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    We need to add an <code>Application_Start</code> method, which is a special
+    event handler that runs when the application starts. In that method we just
+    call <code>RegisterRoutes()</code> and pass <code>RouteTable.Routes</code>.
+    The completed class looks like this:
+</p>
+<div class="panel-group" id="global-vr2-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#global-vr2-source" href="#global-vr2-source-body">
+                    <code>App_Code\Global.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="global-vr2-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Data
+Using System.Configuration
+Using System.Web
+Using System.Web.Routing
+Using System.Web.Security
+Using System.Web.UI
+Using System.Web.UI.WebControls
+Using System.Web.UI.WebControls.WebParts
+Using System.Web.UI.HtmlControls
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass Global Access(*Public) Extends(System.Web.HttpApplication)
+
+    BegSr Application_Start
+        DclSrParm sender Type(*Object)
+        DclSrParm e Type(EventArgs)
+
+        RegisterRoutes(RouteTable.Routes)
+    EndSr
+
+    BegSr RegisterRoutes
+        DclSrParm routes Type(RouteCollection)
+
+        DclFld appRouter Type(Router)
+
+        appRouter = *New Router(routes)
+
+        // contacts.aspx catch-all route
+        appRouter.Page("{*path}", "default", "~/contacts.aspx")
+    EndSr
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    In the next part, we&rsquo;ll build our first JSON API method to fetch all of
+    the contacts data.
+</p>
+<p>
+    Click the <strong>Next</strong> button below to continue when you are ready.
+</p>
+<hr>
+<ul class="pager">
+    <li class="previous"><a href="/Lab2014.SinglePageApp/#tutorial/part-2-data" data-asna-nav="route:tutorial:data">&larr; Previous</a></li>
+    <li class="next"><a href="/Lab2014.SinglePageApp/#tutorial/part-4-index" data-asna-nav="route:tutorial:index">Next &rarr;</a></li>
+</ul>
+<hr>

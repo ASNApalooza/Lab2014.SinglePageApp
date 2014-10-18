@@ -1,0 +1,162 @@
+<div class="page-header">
+    <h2>Part 4: Index</h2>
+</div>
+<p>
+    This is where things get fun <em>and</em> easy. Create a folder in the <code>App_Code</code>
+    folder called <code>Controller</code>. We will place any controller classes
+    in that folder. Create a new class in the <code>Controller</code> folder named
+    <code>ContactController.vr</code>. We only need three Using statements in this
+    class: <code>System</code>, <code>System.Collections.Generic</code>, and
+    <code>ASNA.Palooza.Lab2014.JsonLib</code>. Add the following extends statement:
+</p>
+<pre class="prettyprint">
+BegClass ContactController Access(*Public) <strong>Extends(Controller)</strong>
+</pre>
+<p>
+    We will want to use the <code>Registry</code> in this class, so add a constructor
+    that creates a registry object, and save it as a private variable.
+</p>
+<p>
+    The index action should fetch all of the contacts and return them. The
+    <code>Controller</code> class that we are extending is responsible for serializing
+    the data into JSON and sending the response.
+</p>
+<p>
+    Create a new public method called <code>IndexAction</code> that will return a
+    <code>List(*Of Contact)</code>. Declare a <code>contacts</code> variable of
+    type <code>List(*Of Contact)</code>. Declare a <code>contactRepo</code> variable
+    of type <code>IContactRepository</code>. We set the <code>contactRepo</code>
+    by calling <code>GetContactRepository()</code> on the <code>Registry</code>
+    object. We can then set <code>contacts</code> by calling
+    <code>contactRepo.FindContacts()</code>. Then we just return <code>contacts</code>.
+    The whole thing looks like this:
+</p>
+<div class="panel-group" id="contact-controller-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#contact-controller-source" href="#contact-controller-source-body">
+                    <code>App_Code\Controller\ContactController.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="contact-controller-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Collections.Generic
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass ContactController Access(*Public) Extends(Controller)
+
+    DclFld serviceRegistry Type(Registry) Access(*Private)
+
+    BegConstructor Access(*Public)
+        serviceRegistry = *New Registry()
+    EndConstructor
+
+    // IndexAction
+    // Path: /api/contacts
+    // Method: GET
+    BegFunc IndexAction Type(List(*Of Contact)) Access(*Public)
+
+        DclFld contacts Type(List(*Of Contact))
+        DclFld contactRepo Type(IContactRepository)
+
+        contactRepo = serviceRegistry.GetContactRepository()
+        contacts = contactRepo.FindContacts()
+
+        LeaveSr contacts
+    EndFunc
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    You will see that we made note of the request path <code>/api/contacts</code>
+    and method <code>GET</code> that should trigger this method. We should add
+    those to our routes now.
+</p>
+<p>
+    Open <code>App_Code\Global.vr</code> and add the following line
+    <strong>before</strong> the other route:
+</p>
+<pre class="prettyprint">
+appRouter.Get("api/contacts", "IndexAction", *TypeOf(ContactController))
+</pre>
+<p>
+    That tells the router to create a route for the <code>GET</code> HTTP method
+    with the path <code>api/contacts</code>. When the route matches, the
+    <code>ContactController</code> should be created, and the <code>IndexAction</code>
+    will be called. <code>Global.vr</code> should look like this:
+</p>
+<div class="panel-group" id="global-vr-source">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#global-vr-source" href="#global-vr-source-body">
+                    <code>App_Code\Global.vr</code>
+                </a>
+            </h4>
+        </div>
+        <div id="global-vr-source-body" class="panel-collapse collapse">
+            <div class="panel-body">
+<pre class="prettyprint linenums">
+Using System
+Using System.Data
+Using System.Configuration
+Using System.Web
+Using System.Web.Routing
+Using System.Web.Security
+Using System.Web.UI
+Using System.Web.UI.WebControls
+Using System.Web.UI.WebControls.WebParts
+Using System.Web.UI.HtmlControls
+Using ASNA.Palooza.Lab2014.JsonLib
+
+BegClass Global Access(*Public) Extends(System.Web.HttpApplication)
+
+    BegSr Application_Start
+        DclSrParm sender Type(*Object)
+        DclSrParm e Type(EventArgs)
+
+        RegisterRoutes(RouteTable.Routes)
+    EndSr
+
+    BegSr RegisterRoutes
+        DclSrParm routes Type(RouteCollection)
+
+        DclFld appRouter Type(Router)
+
+        appRouter = *New Router(routes)
+
+        // ContactController routes
+        appRouter.Get("api/contacts", "IndexAction", *TypeOf(ContactController))
+
+        // contacts.aspx catch-all route
+        appRouter.Page("{*path}", "default", "~/contacts.aspx")
+    EndSr
+
+EndClass
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    You should now be able to run the application and send requests to <code>/api/contacts</code>
+    and see data. If you are using the empty SQL database, you&rsquo;ll need to wait
+    until we can add records before real data comes back.
+</p>
+<p>
+    Click the <strong>Next</strong> button below to continue when you are ready.
+</p>
+<hr>
+<ul class="pager">
+    <li class="previous"><a href="/Lab2014.SinglePageApp/#tutorial/part-3-page" data-asna-nav="route:tutorial:page">&larr; Previous</a></li>
+    <li class="next"><a href="/Lab2014.SinglePageApp/#tutorial/part-5-show" data-asna-nav="route:tutorial:show">Next &rarr;</a></li>
+</ul>
+<hr>
